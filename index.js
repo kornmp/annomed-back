@@ -2,14 +2,14 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 
-import postRoutes from './routes/posts.js';
+import projectRoutes from './routes/projects.js';
 
 const app = express();
 
-app.use('/posts', postRoutes);
+app.use('/projects', projectRoutes);
 
-app.use(express.json({ extended: true }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '30mb', extended: true }));
+app.use(express.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors());
 
 const CONNECTION_URL = 'mongodb+srv://test:123123test@annomed-backend.vubvx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
