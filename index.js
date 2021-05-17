@@ -1,22 +1,25 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-
-import projectRoutes from './routes/projects.js';
-
+const express = require('express');
 const app = express();
+const dotenv = require('dotenv');
+const cors = require('cors');
+const mongoose = require('mongoose');
 
-app.use('/projects', projectRoutes);
-
-app.use(express.json({ limit: '30mb', extended: true }));
-app.use(express.urlencoded({ limit: '30mb', extended: true }));
 app.use(cors());
 
-const CONNECTION_URL = 'mongodb+srv://test:123123test@annomed-backend.vubvx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-const PORT = process.env.PORT || 5000;
+const authRoute = require('./routes/auth');
+const postRoute = require('./routes/post');
 
-mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => app.listen(PORT, () => console.log(`Server is runnning on PORT ${PORT}`)))
-    .catch((error) => console.error(error.message));
+dotenv.config();
 
-mongoose.set('useFindAndModify', false);
+mongoose.connect(
+    process.env.DB_CONNECT,
+    { useNewUrlParser: true, useUnifiedTopology: true },
+    () => console.log('connect to db')
+)
+
+app.use(express.json());
+
+app.use('/api/user', authRoute);
+app.use('/api/posts', postRoute);
+
+app.listen(process.env.PORT, () => console.log('Server up and running'));
